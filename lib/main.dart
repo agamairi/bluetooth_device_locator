@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'BLE Messaging App',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: DeviceListScreen(), // Initial screen showing scanned devices
+      home:
+          const DeviceDiscoveryPage(), // Initial screen showing scanned devices
     );
   }
 }
