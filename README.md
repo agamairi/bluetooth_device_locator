@@ -1,4 +1,4 @@
-# ble_chat
+# ble_locator
 
 A new Flutter project.
 
