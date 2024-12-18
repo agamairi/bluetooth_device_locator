@@ -1,3 +1,4 @@
+import 'package:ble_locator/ui/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'ui/device_list_screen.dart';
 
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BLE Messaging App',
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: buildAppTheme(),
       home:
           const DeviceDiscoveryPage(), // Initial screen showing scanned devices
     );
