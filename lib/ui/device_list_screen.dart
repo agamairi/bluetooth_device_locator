@@ -19,7 +19,9 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
   @override
   void initState() {
     super.initState();
-    _startScan();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _startScan();
+    });
   }
 
   // Start scanning for devices
