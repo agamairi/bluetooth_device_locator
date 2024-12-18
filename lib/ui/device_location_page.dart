@@ -66,7 +66,6 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Device Location'),
-        backgroundColor: Colors.blueAccent,
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -86,8 +85,8 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                 child: Column(
                   children: [
                     Text(
-                      'Device: ${widget.device.name}',
-                      style: TextStyle(
+                      'Device: ${widget.device.platformName}',
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.blueAccent,
@@ -95,8 +94,8 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Address: ${widget.device.id.id}',
-                      style: TextStyle(
+                      'Address: ${widget.device.remoteId}',
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
                       ),
@@ -115,8 +114,8 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      'Signal Strength: ${rssiValue} dBm',
-                      style: TextStyle(
+                      'Signal Strength: $rssiValue dBm',
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
                       ),
@@ -124,7 +123,7 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                     const SizedBox(height: 10),
                     Text(
                       'Smoothed RSSI: $smoothedRssi dBm',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
                       ),
@@ -132,7 +131,7 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                     const SizedBox(height: 10),
                     Text(
                       'Estimated Distance: ${estimatedDistance.toStringAsFixed(2)} meters',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black87,
                       ),
@@ -149,7 +148,7 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
               decoration: BoxDecoration(
                 color: Colors.green.shade50,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     blurRadius: 8,
@@ -177,14 +176,6 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 30),
-
-            // Arrow indicating movement direction (optional)
-            Icon(
-              Icons.arrow_forward,
-              size: 100,
-              color: Colors.blueAccent,
             ),
           ],
         ),
