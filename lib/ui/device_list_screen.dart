@@ -1,4 +1,4 @@
-import 'package:ble_chat/ui/device_location_page.dart';
+import 'package:ble_locator/ui/device_location_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -6,7 +6,7 @@ class DeviceDiscoveryPage extends StatefulWidget {
   const DeviceDiscoveryPage({super.key});
 
   @override
-  _DeviceDiscoveryPageState createState() => _DeviceDiscoveryPageState();
+  State<DeviceDiscoveryPage> createState() => _DeviceDiscoveryPageState();
 }
 
 class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
@@ -80,6 +80,14 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Device Discovery'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                stopScan();
+                startScan();
+              },
+              icon: const Icon(Icons.refresh))
+        ],
       ),
       body: Column(
         children: [
