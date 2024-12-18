@@ -16,6 +16,8 @@ class BleServices {
     // Get the list of paired devices
     List<BluetoothDevice> pairedDevices = await getPairedDevices();
 
+    await FlutterBluePlus.stopScan();
+
     // Start scanning with the desired filters, if any paired devices are found
     await FlutterBluePlus.startScan(timeout: const Duration(seconds: 4));
 
