@@ -1,5 +1,6 @@
-// lib/ui/device_location_page.dart
 import 'package:ble_locator/services/ble_service.dart';
+import 'package:ble_locator/ui/app_theme.dart';
+import 'package:ble_locator/ui/components/device_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'device_location_page.dart';
@@ -79,24 +80,18 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
           if (_bleServices.isScanning)
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: coffee,
+              ),
             ),
           Expanded(
             child: ListView.builder(
               itemCount: _bleServices.devicesList.length,
               itemBuilder: (context, index) {
                 BluetoothDevice device = _bleServices.devicesList[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(device.advName.isEmpty
-                        ? 'Unknown device'
-                        : device.advName),
-                    subtitle: Text(device.remoteId.toString()),
-                    trailing: ElevatedButton(
-                      onPressed: () => _connectToDevice(device),
-                      child: const Text('Connect'),
-                    ),
-                  ),
+                return DeviceCard(
+                  device: device,
+                  onConnect: () => _connectToDevice(device),
                 );
               },
             ),
