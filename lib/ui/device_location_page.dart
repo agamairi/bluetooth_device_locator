@@ -1,6 +1,8 @@
 import 'package:ble_locator/services/location_service.dart';
+import 'package:ble_locator/ui/components/semi_circle_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'dart:math';
 
 class DeviceLocationPage extends StatefulWidget {
   final BluetoothDevice device;
@@ -73,76 +75,80 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Device Info Card
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              elevation: 5,
-              color: Colors.blue.shade50,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Text(
-                      'Device: ${widget.device.platformName}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueAccent,
+            // Device Info Card (top half)
+            Expanded(
+              flex: 1,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                elevation: 5,
+                color: Colors.blue.shade50,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        'Device: ${widget.device.platformName}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueAccent,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Address: ${widget.device.remoteId}',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
+                      const SizedBox(height: 10),
+                      Text(
+                        'Address: ${widget.device.remoteId}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    // RSSI Progress Bar
-                    LinearProgressIndicator(
-                      value:
-                          (rssiValue + 100) / 100, // Normalize RSSI (-100 to 0)
-                      backgroundColor: Colors.grey.shade300,
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                          rssiValue > previousRssiValue
-                              ? Colors.green
-                              : Colors.red),
-                      minHeight: 8,
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Signal Strength: $rssiValue dBm',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
+                      const SizedBox(height: 20),
+                      Text(
+                        'Signal Strength: $rssiValue dBm',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Smoothed RSSI: $smoothedRssi dBm',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
+                      const SizedBox(height: 10),
+                      Text(
+                        'Smoothed RSSI: $smoothedRssi dBm',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Estimated Distance: ${estimatedDistance.toStringAsFixed(2)} meters',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
+                      const SizedBox(height: 10),
+                      Text(
+                        'Estimated Distance: ${estimatedDistance.toStringAsFixed(2)} meters',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
+
             const SizedBox(height: 30),
 
+            // Semicircular Progress Indicator (bottom half)
+            Expanded(
+              flex: 2,
+              child: SemicircularProgressIndicator(
+                progress: (rssiValue + 100) / 100, // Normalize RSSI (-100 to 0)
+                backgroundColor: Colors.grey.shade300,
+                progressColor:
+                    rssiValue > previousRssiValue ? Colors.green : Colors.red,
+              ),
+            ),
+
             // Movement Feedback Section
+            const SizedBox(height: 30),
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
