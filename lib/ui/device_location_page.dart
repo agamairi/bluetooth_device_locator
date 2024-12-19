@@ -2,7 +2,6 @@ import 'package:ble_locator/services/location_service.dart';
 import 'package:ble_locator/ui/components/semi_circle_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'dart:math';
 
 class DeviceLocationPage extends StatefulWidget {
   final BluetoothDevice device;
