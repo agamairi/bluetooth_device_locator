@@ -1,4 +1,5 @@
 import 'package:ble_locator/services/location_service.dart';
+
 import 'package:ble_locator/ui/components/semi_circle_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -45,14 +46,15 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
   }
 
   // Calculate the distance from the device using the LocationService
-  num get estimatedDistance =>
-      _locationService.calculateDistanceFromRssi(rssiValue);
+  num get estimatedDistance => _locationService.calculateDistanceFromRssi(
+        _locationService.smoothedRssi.toInt(),
+      );
 
   // Track movement direction using the LocationService
   void _trackMovement() {
     setState(() {
-      _movementFeedback =
-          _locationService.trackMovementDirection(rssiValue, previousRssiValue);
+      _movementFeedback = _locationService.trackMovementDirection(
+          _locationService.smoothedRssi.toInt(), previousRssiValue);
     });
   }
 
@@ -68,121 +70,114 @@ class _DeviceLocationPageState extends State<DeviceLocationPage> {
       appBar: AppBar(
         title: const Text('Device Location'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Device Info Card (top half)
-            Expanded(
-              flex: 1,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                elevation: 5,
-                color: Colors.blue.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        'Device: ${widget.device.platformName}',
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
+      body: SizedBox(
+        width: double.maxFinite,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // Device Info Card (top half)
+              SizedBox(
+                width: double.maxFinite,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 2),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.device.platformName,
+                          softWrap: true,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Address: ${widget.device.remoteId}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        const SizedBox(height: 10),
+                        Text(
+                          '${widget.device.remoteId}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Signal Strength: $rssiValue dBm',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        const SizedBox(height: 10),
+                        Text(
+                          'Signal Strength: ${(smoothedRssi + 100) / 80}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Smoothed RSSI: $smoothedRssi dBm',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
+                        const SizedBox(height: 10),
+                        Text(
+                          'Estimated Distance: ${estimatedDistance.toStringAsFixed(2)} feet',
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Estimated Distance: ${estimatedDistance.toStringAsFixed(2)} meters',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 30),
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
 
-            // Semicircular Progress Indicator (bottom half)
-            Expanded(
-              flex: 2,
-              child: SemicircularProgressIndicator(
-                progress: (rssiValue + 100) / 100, // Normalize RSSI (-100 to 0)
+              // Semicircular Progress Indicator (bottom half)
+              SemicircularProgressIndicator(
+                progress: (rssiValue + 100) / 80, // Normalize RSSI (-100 to 0)
                 backgroundColor: Colors.grey.shade300,
-                progressColor:
-                    rssiValue > previousRssiValue ? Colors.green : Colors.red,
+                progressColor: smoothedRssi > previousRssiValue
+                    ? Colors.red
+                    : Colors.green,
+                estimatedDistance: estimatedDistance.toStringAsFixed(2),
               ),
-            ),
 
-            // Movement Feedback Section
-            const SizedBox(height: 30),
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Movement Feedback:',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green.shade700,
+              // Movement Feedback Section
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
+
+              Container(
+                padding: const EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.green.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    _movementFeedback,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green.shade700,
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      'Movement Feedback:',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green.shade700,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 10),
+                    Text(
+                      _movementFeedback,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.green.shade700,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

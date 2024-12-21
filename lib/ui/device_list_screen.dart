@@ -1,5 +1,4 @@
 import 'package:ble_locator/services/ble_service.dart';
-import 'package:ble_locator/ui/app_theme.dart';
 import 'package:ble_locator/ui/components/device_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -13,16 +12,14 @@ class DeviceDiscoveryPage extends StatefulWidget {
 }
 
 class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
-  final BleServices _bleServices =
-      BleServices(); // Create an instance of BleServices
+  final _bleServices = BleServices();
   late BluetoothDevice connectedDevice;
+  bool isScanning = true;
 
   @override
   void initState() {
+    _startScan();
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startScan();
-    });
   }
 
   // Start scanning for devices
@@ -54,6 +51,12 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
     }
   }
 
+  Future<void> fetchScanValue() async {
+    await Future.delayed(const Duration(seconds: 4), () {
+      isScanning = _bleServices.isScanning;
+    });
+  }
+
   @override
   void dispose() {
     _stopScan();
@@ -62,6 +65,7 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
 
   @override
   Widget build(BuildContext context) {
+    fetchScanValue();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Device Discovery'),
@@ -77,12 +81,10 @@ class _DeviceDiscoveryPageState extends State<DeviceDiscoveryPage> {
       ),
       body: Column(
         children: [
-          if (_bleServices.isScanning)
+          if (isScanning)
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                color: coffee,
-              ),
+              child: CircularProgressIndicator(),
             ),
           Expanded(
             child: ListView.builder(
