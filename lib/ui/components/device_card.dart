@@ -1,4 +1,3 @@
-import 'package:ble_locator/ui/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
@@ -26,7 +25,6 @@ class DeviceCard extends StatelessWidget {
         ),
         subtitle: Text(
           device.remoteId.toString(),
-          style: const TextStyle(color: coffee),
         ),
         trailing: ElevatedButton(
           onPressed: onConnect,
