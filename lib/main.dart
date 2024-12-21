@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'BLE Messaging App',
-      theme: buildAppTheme(),
+      theme: buildAppTheme(context),
       home:
           const DeviceDiscoveryPage(), // Initial screen showing scanned devices
     );
