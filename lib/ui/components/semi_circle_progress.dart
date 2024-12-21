@@ -1,29 +1,47 @@
-// Custom Semicircular Progress Indicator
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class SemicircularProgressIndicator extends StatelessWidget {
   final double progress;
   final Color backgroundColor;
   final Color progressColor;
+  final String estimatedDistance;
 
   const SemicircularProgressIndicator({
     super.key,
     required this.progress,
     required this.backgroundColor,
     required this.progressColor,
+    required this.estimatedDistance,
   });
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(200, 100),
-      painter: _SemicircularProgressPainter(
-        progress: progress,
-        backgroundColor: backgroundColor,
-        progressColor: progressColor,
-      ),
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        CustomPaint(
+          size: const Size(400, 200),
+          painter: _SemicircularProgressPainter(
+            progress: progress,
+            backgroundColor: backgroundColor,
+            progressColor: progressColor,
+          ),
+        ),
+        Column(
+          children: [
+            Text(
+              estimatedDistance,
+              style: TextStyle(
+                fontSize: 48,
+                fontWeight: FontWeight.bold,
+                color: progressColor,
+              ),
+            ),
+            const Text('Feet')
+          ],
+        ),
+      ],
     );
   }
 }
@@ -44,19 +62,18 @@ class _SemicircularProgressPainter extends CustomPainter {
     final paintBackground = Paint()
       ..color = backgroundColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12;
+      ..strokeWidth = 24;
 
     final paintProgress = Paint()
       ..color = progressColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 12
+      ..strokeWidth = 24
       ..strokeCap = StrokeCap.round;
 
     final rect = Rect.fromCircle(
         center: Offset(size.width / 2, size.height), radius: size.width / 2);
     const startAngle = -pi; // Starting from the left side of the semicircle
-    final sweepAngle =
-        pi * progress; // Progress determines how much of the semicircle to fill
+    final sweepAngle = pi * progress;
 
     // Draw the background (full circle)
     canvas.drawArc(rect, startAngle, pi, false, paintBackground);
