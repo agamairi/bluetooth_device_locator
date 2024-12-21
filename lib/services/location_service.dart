@@ -33,11 +33,11 @@ class LocationService {
   // Method to track if user is getting closer or moving away based on RSSI values
   String trackMovementDirection(int rssiValue, int previousRssiValue) {
     if (rssiValue > previousRssiValue) {
-      return 'You are getting closer to the device';
+      return 'You are moving away from your device';
     } else if (rssiValue < previousRssiValue) {
-      return 'You are moving away from the device';
+      return 'You are getting closer to your device';
     } else {
-      return 'You are at the same distance from the device';
+      return 'You are stationary';
     }
   }
 
